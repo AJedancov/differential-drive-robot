@@ -45,10 +45,28 @@ if __name__=="__main__":
                 break
             if(key == 'e'):
                 vel += 5
-                print("current speed: ", vel)
+                print("Current speed: ", vel)
             if(key == 'q'):
                 vel -= 5
-                print("current speed: ", vel)
+                print("Current speed: ", vel)
+            if (key == 'm'):
+                print("=================================================")
+                print("You are using manual mode!")
+                print("Use the following keys to control:")
+                print("w - forward")
+                print("x - back")
+                print("a - left turn")
+                print("d - right turn")
+                print("s - stop moving")
+                print("e - increase the speed of rotation of the wheels")
+                print("q - reduce the speed of rotation of the wheels")
+                print("=================================================")
+
+            if (key == 'g'):
+                print("=================================================")
+                print("You are using Target Drive mode!")
+                print("Use the following keys to control:")
+                print("=================================================")
 
 
     except Exception as e:
