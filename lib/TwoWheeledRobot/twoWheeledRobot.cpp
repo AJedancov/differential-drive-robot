@@ -73,17 +73,20 @@ byte TwoWheeledRobot::getSerialData()
 
 void TwoWheeledRobot::serialControl()
 {
+  int dt = 50;
   while (true)
   {
     inByte = getSerialData();
     switch (inByte)
       {
         case ('m'):
-        Serial.println("=== You are using manual control ===");
-          manualControl(50);
+        // Serial.println("=== You are using manual control ===");
+          manualControl(dt);
         break;
         case ('g'):
-          goToGoal(1,1, 50);
+          float x = getSerialData();
+          float y = getSerialData();
+          goToGoal(x,y, dt);
         break;
       }
   }
@@ -94,6 +97,7 @@ void TwoWheeledRobot::serialControl()
 // ======= GO ======== //
 void TwoWheeledRobot::goToGoal(float xGoal, float yGoal, float dt)
 {
+
   //Расчет угла, на котором расположена целевая точка
   pos.thetaGoal = atan2(yGoal-pos.y, xGoal-pos.x);
   if (DEBUG){
