@@ -84,8 +84,27 @@ void TwoWheeledRobot::serialControl()
           manualControl(dt);
         break;
         case ('g'):
-          float x = getSerialData();
-          float y = getSerialData();
+          byte flag=0;
+          float x = 0;
+          float y = 0;
+          while(true)
+          {
+            char data = getSerialData();
+            if (data || flag==0)
+            {
+              x = data;
+              flag++;
+            }
+            if (data || flag==0)
+            {
+              y = data;
+              flag++;
+            }
+            if (flag==2)
+            {
+              break;
+            }
+          }
           goToGoal(x,y, dt);
         break;
       }
