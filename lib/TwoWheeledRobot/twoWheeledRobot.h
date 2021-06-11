@@ -21,7 +21,7 @@ private:
 
     bool reachedGoal;
     int newMinRahge; // Для функции map в setVelocity
-    byte inByte;
+    byte inSerial;
 
 public:
     TwoWheeledRobot();

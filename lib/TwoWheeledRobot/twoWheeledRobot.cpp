@@ -5,7 +5,7 @@
 TwoWheeledRobot::TwoWheeledRobot()
   :reachedGoal(0), 
   PIN_CURRENT_SENSOR(A12),
-  inByte(0), newMinRahge(150)
+  inSerial(0), newMinRahge(150)
 {
   Serial.begin(9600);
   motorBlockL = new MotorBlock();
@@ -62,12 +62,11 @@ float TwoWheeledRobot::getRadiusWheels()
 
 byte TwoWheeledRobot::getSerialData()
 {
-  return Serial.read();
+    return Serial.read();
 }
 
 // void TwoWheeledRobot::sendSerialData(std::sring &str)
 // {
-//   Serial.writeln(str);
 // }
 
 
@@ -76,29 +75,32 @@ void TwoWheeledRobot::serialControl()
   int dt = 50;
   while (true)
   {
-    inByte = getSerialData();
-    switch (inByte)
+    inSerial = getSerialData();
+    // Serial.println(inSerial);
+
+    switch (inSerial)
       {
         case ('m'):
-        // Serial.println("=== You are using manual control ===");
+          Serial.println("=== You are using manual control ===");
           manualControl(dt);
         break;
         case ('g'):
+          inSerial = getSerialData();
           byte flag=0;
           float x = 0;
           float y = 0;
           while(true)
           {
-            char data = getSerialData();
-            if (data || flag==0)
+            if (inSerial !=255 && flag==0)
             {
-              x = data;
-              flag++;
+              x = (float)inSerial;
+              Serial.println(x);
             }
-            if (data || flag==0)
+            if (inSerial !=255 && flag==1)
             {
-              y = data;
-              flag++;
+              y = (float)inSerial;
+              Serial.println(y);
+              // flag++;
             }
             if (flag==2)
             {
@@ -148,6 +150,10 @@ void TwoWheeledRobot::goToGoal(float xGoal, float yGoal, float dt)
     float distWheelC = (distWheelR+distWheelL) / 2;
 
     pos.computeCurentPose(distWheelL, distWheelR, distWheelC, L);
+
+
+    String msg_enc = String(pos.x, 3) + " " + String(pos.y, 3);
+    Serial.println(msg_enc);
  
 
     if((abs(pos.x-xGoal) < 0.03) && (abs(pos.y-yGoal) < 0.03))
@@ -207,17 +213,16 @@ void TwoWheeledRobot::goToGoal(float xGoal, float yGoal, float dt)
     //   }
     // }
 
-  
-    switch(getSerialData())
+    inSerial = getSerialData();
+    if (inSerial=='s')
     {
-      case('s'):
-        stopMoving();
-      break;
-      case('r'):
-        stopMoving();
-        break;
+      stopMoving();
+    } else if (inSerial=='b')
+    {
+      Serial.println("-");
       break;
     }
+
 
     delay(dt);
   }
@@ -232,7 +237,9 @@ void TwoWheeledRobot::manualControl(float dt)
 
   while(true)
   {
-    switch (getSerialData())
+    inSerial = getSerialData();
+    // Serial.println(inSerial);
+    switch (inSerial)
     {
       case ('w'):
         goForward(vel, vel);
@@ -262,6 +269,11 @@ void TwoWheeledRobot::manualControl(float dt)
       break;
     }
 
+    if (inSerial == 'b')
+    {
+      break;
+    }
+
     float distWheelL = motorBlockL->getTraveledDistance();
     float distWheelR = motorBlockR->getTraveledDistance();
     float distWheelC = (distWheelR + distWheelL) / 2;
@@ -270,6 +282,13 @@ void TwoWheeledRobot::manualControl(float dt)
 
     String msg_enc = String(pos.x, 3) + " " + String(pos.y, 3);
     Serial.println(msg_enc);
+
+    
+    // inSerial = getSerialData();
+
+
+
+
     delay(dt);
   }
 }
