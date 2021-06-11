@@ -11,6 +11,8 @@ if ros_path in sys.path:
 import cv2
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
+print("\n=== Start Client ===\n")
+
 HOST = '192.168.0.110'  # IP address
 # HOST = '127.0.0.1'  
 PORT = 15000
@@ -23,19 +25,28 @@ def getKey():
     if rlist:
         key = sys.stdin.read(1)
     else:
-        key = ''
+        key = 0
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
     return key
- 
+
+
+def printMenu():
+    print("\n=========================")
+    print("Select operating mode:")
+    print("m - manual mode")
+    print("g - go to goal mode")
+    print("=========================")
 
 if __name__=="__main__":
-    print("current speed: ", vel)
+    print("Current wheels speed: ", vel)
     settings = termios.tcgetattr(sys.stdin)
 
     sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sck.connect((HOST, PORT))
+    printMenu()
     try:
         while True:
+            
             key = getKey()
             print(key)
             if key:
@@ -51,7 +62,7 @@ if __name__=="__main__":
                 print("Current speed: ", vel)
             if (key == 'm'):
                 print("=================================================")
-                print("You are using manual mode!")
+                print("You are using Manual mode!")
                 print("Use the following keys to control:")
                 print("w - forward")
                 print("x - back")
@@ -64,9 +75,11 @@ if __name__=="__main__":
 
             if (key == 'g'):
                 print("=================================================")
-                print("You are using Target Drive mode!")
-                print("Use the following keys to control:")
+                print("You are using Go To Goal mode!")
                 print("=================================================")
+            
+            if (key == 'b'):
+                printMenu()
 
 
     except Exception as e:
