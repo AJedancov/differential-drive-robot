@@ -62,7 +62,7 @@ This code uses a third party library AS5600 licensed under the [GPL-3.0 License]
 Clone the repository:
 
 ```bash
-git clone https://github.com/industrial-robotics-lab/differential-drive-robot.git
+git clone https://github.com/AZhed/differential-drive-robot.git
 ```
 Go to the project folder:
 ```bash
